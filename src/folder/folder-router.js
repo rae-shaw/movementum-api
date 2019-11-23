@@ -1,6 +1,7 @@
 const path = require('path')
 const express = require('express')
 const FolderService = require('./folder-service')
+const { requireAuth } = require('../middleware/jwt-auth')
 
 const folderRouter = express.Router()
 const jsonParser = express.json()
@@ -13,29 +14,36 @@ const serializeFolder = folder => ({
 
 folderRouter
 	.route('/')
+	.all(requireAuth)
 	.get((req, res, next) => {
 		const knexInstance = req.app.get('db')
-		FolderService.getAllFolders(knexInstance, user_id)
+		console.log('**********', req.user)
+		FolderService.getAllFolders(knexInstance, req.user.id)
 			.then(folders => {
 				res.json(folders.map(serializeFolder))
 			})
 		.catch(next)
 	})
 	.post(jsonParser, (req, res, next) => {
-		const folder = req.body
+		const { name } = req.body
+		folderReq = { name }
 	
-			if (folder.name == undefined) {
-				return res.status(400).json({
-					error: { message: `Missing folder name in request body`}
-				})
-			}
+			for (const [key, value] of Object.entries(folderReq))
+      			if (value == null)
+        			return res.status(400).json({
+         				 error: `Missing '${key}' in request body`
+        		})
+       	const newFolder ={
+       		name, user_id: req.user.id
+       	}
 		FolderService.insertFolder(
 			req.app.get('db'),
-			req.body
+			newFolder
 		)
 			.then(folder=> {
 				res
 					.status(201)
+					.location(path.posix.join(req.originalUrl, `/${folder.id}`))
 					.json(folder)
 			})
 			.catch(next)
@@ -43,12 +51,13 @@ folderRouter
 
 folderRouter
 	.route('/:id')
+	.all(requireAuth)
 	.all((req, res, next) => {
-		FolderService.getById(req.app.get('db'), req.params.id)
+		FolderService.getById(req.app.get('db'), req.params.id, req.user.id)
 			.then(folder => {
 				if(!folder) {
 					return res.status(404).json({
-						error: { message: `Folder Not Found`}
+						error : `Folder doesn't exist`
 					})
 				}
 				res.folder = folder
@@ -63,7 +72,8 @@ folderRouter
 	.delete((req, res, next) => {
 		FolderService.deleteFolder(
 			req.app.get('db'),
-			req.params.id
+			req.params.id,
+			req.user.id
 		)
 			.then(numRowsAffected => {
 				res.status(204).end()

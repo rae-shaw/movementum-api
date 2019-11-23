@@ -6,7 +6,6 @@ const FolderService = {
 		.where({ user_id })
 	},
 	insertFolder(knex, newFolder) {
-		console.log(newFolder)
 		return knex
 			.insert(newFolder)
 			.into('folder')
@@ -15,17 +14,18 @@ const FolderService = {
 				return rows[0]
 			})
 	},
-	getById(knex, id){
+	getById(knex, id, user_id ){
 		return knex
 			.from('folder')
 			.select('*')
 			.where({ id })
+			.andWhere({ user_id })
 			.first()
-			//do I need the userID here too?
 	},
-	deleteFolder(knex, id){
+	deleteFolder(knex, id, user_id){
 		return knex('folder')
 			.where({ id })
+			.andWhere({ user_id })
 			.delete()
 	},
 }

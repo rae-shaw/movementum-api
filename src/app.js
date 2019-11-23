@@ -9,7 +9,9 @@ const {CLIENT_ORIGIN} = require('./config');
 const logger = require('./logger')
 
 const folderRouter = require('./folder/folder-router')
+const planRouter = require('./plan/plan-router')
 const usersRouter = require('./users/users-router')
+const authRouter = require('./auth/auth-router')
 
 const app = express()
 
@@ -23,7 +25,8 @@ app.use(cors())
 
 app.use('/api/users', usersRouter)
 app.use('/api/folder', folderRouter)
-
+app.use('/api/plan', planRouter)
+app.use('/api/auth', authRouter)
 
 app.get('/', (req, res) => {
 	res.send('Hello, world!')
