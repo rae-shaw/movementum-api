@@ -17,7 +17,6 @@ folderRouter
 	.all(requireAuth)
 	.get((req, res, next) => {
 		const knexInstance = req.app.get('db')
-		console.log('**********', req.user)
 		FolderService.getAllFolders(knexInstance, req.user.id)
 			.then(folders => {
 				res.json(folders.map(serializeFolder))

@@ -23,7 +23,6 @@ planRouter
 	.all(requireAuth)
 	.get((req, res, next) => {
 		const knexInstance = req.app.get('db')
-		console.log('********** req.user', req.user)
 		PlanService.getAllPlans(knexInstance, req.user.id)
 			.then(plans => {
 				res.json(plans.map(serializePlan))
@@ -32,15 +31,8 @@ planRouter
 	})
 	.post(jsonParser, (req, res, next) => {
 		const { name, class_date, warm_up, skills, notes, students, folder_id, date_created } = req.body
-		console.log(req.body)
 		planReq = { name, folder_id }
-		console.log('PLANREQ', planReq)
-	
-			// for (const [key, value] of Object.entries())
-   //    			if (value == null)
-   //      			return res.status(400).json({
-   //       				 error: `Missing '${key}' in request body`
-   //      		})
+
         const newPlan ={
        		name, class_date, warm_up, skills, notes, students, folder_id, date_created, user_id: req.user.id
        	}
@@ -89,10 +81,6 @@ planRouter
 			.catch(next)
 	})
 	.patch(jsonParser, (req, res, next) => {
-		//const { id, user_id } = req.body
-
-		console.log('**************** req.body', req.body)
-	
 		const { name, class_date, warm_up, skills, notes, students } = req.body
 		planReq = { name, class_date, warm_up, skills, notes, students }
 

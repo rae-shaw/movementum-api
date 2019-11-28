@@ -1,26 +1,188 @@
-# Express Boilerplate!
+Movementum API
+===================
 
-This is a boilerplate project used for starting new projects!
 
-## Set up
+Summary
+-------
+Movementum is a class planning tool designed by and for movement instructors. It fills a gap in class and lesson planning specifically for movement instructors, like dance, yoga, and aerial arts instructors.
+Instructors can create folders for classes and organize their lesson plans by class. Instructors can keep track of your students' progress.
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
 
-1. Clone this repository to your local machine `git clone https://github.com/rae-shaw/express-boilerplate NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
 
-## Scripts
+API Overview
+------------
+```# /api
+.
+ 	* /auth
+ 		* POST
+ 			* /login
+ 	* /folder
+ 		* GET
+ 			* /
+ 			* /:id
+ 		* POST
+ 			* /
+ 	* /plan
+ 		* GET
+ 			* /
+ 			* /:id
+ 		* POST
+ 			* /
+ 		* PATCH 
+ 			* /:id
+ 		* DELETE
+ 			* /:id
+ 	* /user
+ 		* POST
+ 			* /
+ 	
+```
+POST `/api/auth/login`
+```
+//res.body
+JWT token
+```
 
-Start the application `npm start`
+GET `/api/folder/`
+```
 
-Start nodemon for the application `npm run dev`
+//res.body
+[
+	{
+		id: id,
+		name: name,
+		date_created: date_created
 
-Run the tests `npm test`
+	}
+]
+```
+GET `/api/folder/id`
+```
+//req.body
+{
+	id : id
+}
+//res.body
+{
+	id: id,
+	name: name,
+	date_created: date_created
+}
+```
+POST `/api/folder/id`
+```
+//req.body
+{
+	name : name
+}
+//res.body
+{
+	id: id,
+	name: name,
+	date_created: date_created
+}
+```
+GET `/api/plan`
+```
+//res.body
+{
+	[
+		id : id,
+		name : name,
+		class_date : class_date,
+		warm_up : warm_up,
+		skills : skills,
+		notes : notes,
+		students : students,
+		folder_id : folder_id,
+		date_created : date_created
+	]
+}
+```
+GET `/api/plan/:id`
+```
+//req.body
+{
+	id : id
+}
+//res.body
+{
+	id : id,
+	name : name,
+	class_date : class_date,
+	warm_up : warm_up,
+	skills : skills,
+	notes : notes,
+	students : students,
+	folder_id : folder_id,
+	date_created : date_created
+}
+```
+POST `/api/plan/`
+```
+//req.body
+{
+	name : name,
+	class_date : class_date,
+	warm_up : warm_up,
+	skills : skills,
+	notes : notes,
+	students : students,
+	folder_id : folder_id,
+}
+//res.body
+{
+	id : id,
+	name : name,
+	class_date : class_date,
+	warm_up : warm_up,
+	skills : skills,
+	notes : notes,
+	students : students,
+	folder_id : folder_id,
+	date_created : date_created
 
-## Deploying
+}
+```
+DELETE `/api/plan/:id`
+```
+//req.body
+{
+	id : id
+}
+//res.body
+{
+	status : 204
+}
+```
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+PATCH `/api/plan/:id`
+```
+//req.body
+{
+	id : id
+}
+//res.body
+{
+	status : 204
+}
+```
+
+
+
+
+Built with:
+-----------
+Client-side
+* HTML5
+* CSS
+* JavaScript
+* React
+
+Server-side
+* Node
+* Knex
+* Express
+* PostgreSQL
+* Heroku
+* Zeit

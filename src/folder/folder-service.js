@@ -2,7 +2,7 @@ const FolderService = {
 	getAllFolders(knex, user_id){
 		return knex
 		.from('folder')
-		.select('*')
+		.select('id', 'name', 'date_created')
 		.where({ user_id })
 	},
 	insertFolder(knex, newFolder) {
@@ -17,7 +17,7 @@ const FolderService = {
 	getById(knex, id, user_id ){
 		return knex
 			.from('folder')
-			.select('*')
+			.select('id', 'name', 'date_created')
 			.where({ id })
 			.andWhere({ user_id })
 			.first()
